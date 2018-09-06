@@ -48,6 +48,9 @@ parser.add_argument(
 parser.add_argument(
     '--config-path', type=str, default='rho-gh.yaml',
     help='path to the yaml configuration')
+parser.add_argument(
+    '--file-prefix', type=str, default='',
+    help='file name prefix')
 
 args = parser.parse_args()
 
@@ -136,9 +139,13 @@ if __name__ == "__main__":
             "gitweb": orguri + "/%(name)s/commit/%%(sha)s",
         }
 
-        path = '%s.yaml' % project['projectName'].replace('/', '-')
+        path = '%s%s.yaml' % (
+            args.file_prefix, project['projectName'].replace('/', '-'))
         if args.output_path:
             path = os.path.join(os.path.expanduser(args.output_path), path)
+
+        if not os.path.isdir(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path))
 
         with open(path, 'w') as fd:
             fd.write(yaml.safe_dump(struct,
