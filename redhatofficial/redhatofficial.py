@@ -97,6 +97,9 @@ if __name__ == "__main__":
 
     c = len(gp)
     for project in gp:
+        if project['projectName'] in conf.get('exclude', []):
+            print('Project %s excluded. Skip' % project['projectName'])
+            continue
         projects = {}
         templates = {}
         struct = {'projects': projects,
